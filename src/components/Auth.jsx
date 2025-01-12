@@ -1,10 +1,57 @@
 import { Formik } from "formik";
-import { useState } from "react";
+import { useDebugValue, useState } from "react";
+import { auth } from "../utils/firebase";
+import { useRef } from "react";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  updateProfile,
+} from "firebase/auth";
+import { useDispatch } from "react-redux";
+import { addUser } from "../utils/userSlice";
 
 const Auth = () => {
+  const dispatch = useDispatch();
   const [authState, setAuthState] = useState("SIGN_IN");
+  const [errorMessage, setErrorMessage] = useState(null);
+  const email = useRef(null);
+  const password = useRef(null);
   const handleAuthStateChange = () => {
     setAuthState(authState === "SIGN_IN" ? "SIGN_UP" : "SIGN_IN");
+  };
+  const handleButtonClick = () => {
+    if (authState === "SIGN_UP") {
+      createUserWithEmailAndPassword(
+        auth,
+        email.current.value,
+        password.current.value
+      )
+        .then((userCredential) => {
+          // const user = userCredential.user;
+          const { uid, email } = auth.currentUser;
+          dispatch(addUser({ uid: uid, email: email }));
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          setErrorMessage("Errror: - " + errorCode + ", " + errorMessage);
+        });
+    } else {
+      signInWithEmailAndPassword(
+        auth,
+        email.current.value,
+        password.current.value
+      )
+        .then((userCredential) => {
+          const { uid, email } = auth.currentUser;
+          dispatch(addUser({ uid: uid, email: email }));
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          setErrorMessage(errorCode + "-" + errorMessage);
+        });
+    }
   };
   return (
     <div className="w-[400px]">
@@ -25,6 +72,7 @@ const Auth = () => {
           setTimeout(() => {
             alert(JSON.stringify(values, null, 2));
             setSubmitting(false);
+            handleButtonClick();
           }, 400);
         }}
       >
@@ -36,7 +84,6 @@ const Auth = () => {
           handleBlur,
           handleSubmit,
           isSubmitting,
-          /* and other goodies */
         }) => (
           <form
             onSubmit={handleSubmit}
@@ -53,11 +100,13 @@ const Auth = () => {
               value={values.email}
               placeholder="Email"
               className="h-[50px] w-[300px] focus:outline p-2"
+              ref={email}
             />
             <p className="text-red-700 font-bold">
               {errors.email && touched.email && errors.email}
             </p>
             <input
+              ref={password}
               type="password"
               name="password"
               onChange={handleChange}

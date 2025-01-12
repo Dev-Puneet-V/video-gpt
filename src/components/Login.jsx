@@ -1,7 +1,6 @@
 import Auth from "./Auth";
 import Header from "./Header";
-import MovieList from "./MovieList";
-import PrimaryHomeScreen from "./PrimaryHomeScreen";
+
 const Home = () => {
   return (
     <div
@@ -12,7 +11,13 @@ const Home = () => {
       }}
     >
       <Header />
-      <PrimaryHomeScreen />
+      <div className="z-10 flex justify-between w-screen p-7 bg-gradient-to-b from-black to-grey absolute">
+        <img className="w-[170px]" src="/assets/netflix-icon-large.svg" />
+        {/* <button className="w-[80px] h-[40px] bg-white rounded-full font-bold">
+          Sign In
+        </button> */}
+      </div>
+      {/* <PrimaryHomeScreen /> */}
       <div className="fixed top-0 left-0 bottom-0 right-0 h-screen w-screen flex items-center justify-center">
         <Auth />
       </div>

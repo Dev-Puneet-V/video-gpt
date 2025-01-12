@@ -1,26 +1,17 @@
 import MovieCard from "./MovieCard";
 
-const MovieList = (props) => {
-  const { topic, movies } = props;
+const MovieList = ({ title, movies }) => {
   return (
-    <div>
-      <p className="font-bold text-4xl">{topic} || Trending Now</p>
-      <div>
-        <div className="overflow-x-scroll">
-          {movies?.map((movie) => {
-            return (
-              <MovieCard
-                img={
-                  movie.url ||
-                  "https://occ-0-2164-325.1.nflxso.net/dnm/api/v6/mAcAr9TxZIVbINe88xb3Teg5_OA/AAAABcA03N2P8G7Pnep3ahHLJXFxgxZNtsNzXy2oTZ9vC1zyy7xvgtCbUg1xH8Pj0-ILIz0fkJwUiPKBvXj-mZ2wFUiCCIl3EMzaK3V7g0Njpn38F6lHI9QANL9-PFFag9sE8TASsg.webp"
-                }
-              />
-            );
-          })}
+    <div className="px-6 ">
+      <h1 className="text-lg md:text-3xl py-4 text-white">{title}</h1>
+      <div className="flex overflow-x-scroll">
+        <div className="flex">
+          {movies?.map((movie) => (
+            <MovieCard key={movie.id} posterPath={movie.poster_path} />
+          ))}
         </div>
       </div>
     </div>
   );
 };
-
 export default MovieList;

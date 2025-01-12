@@ -1,11 +1,11 @@
-const MovieCard = (props) => {
-  const { img } = props;
+import { IMG_CDN_URL } from "../utils/constant";
+
+const MovieCard = ({ posterPath }) => {
+  if (!posterPath) return null;
   return (
-    <div
-      className="rounded-md h-[300px] w-[100px] hover:h-[310px] hover:w-[110px] transition-all duration-300"
-      style={{ backgroundImage: `url(${img})` }}
-    ></div>
+    <div className="w-36 md:w-48 pr-4">
+      <img alt="Movie Card" src={IMG_CDN_URL + posterPath} />
+    </div>
   );
 };
-
 export default MovieCard;
